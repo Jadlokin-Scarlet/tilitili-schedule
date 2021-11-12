@@ -1,19 +1,3 @@
-/*
- Navicat Premium Data Transfer
-
- Source Server         : mysql
- Source Server Type    : MySQL
- Source Server Version : 50735
- Source Host           : 47.100.66.36:3306
- Source Schema         : tilitili_schedule
-
- Target Server Type    : MySQL
- Target Server Version : 50735
- File Encoding         : 65001
-
- Date: 12/11/2021 16:37:38
-*/
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
