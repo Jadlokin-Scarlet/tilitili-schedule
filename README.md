@@ -1,6 +1,6 @@
 # Tilitili job开源框架
 
-一个带简单的登陆页面的Job框架，
+一个带简单的管理页面的Job框架，
 
 ## 一个简单的示例
 ```
@@ -35,3 +35,5 @@ schedule.datasource.jdbcUrl=you mysql connect url
 schedule.datasource.username=you username
 schedule.datasource.password=you password
 ```
+5. 运行，打开
+http://localhost:8080
