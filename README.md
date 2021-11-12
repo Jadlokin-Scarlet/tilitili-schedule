@@ -13,7 +13,7 @@ public class TestJob {
 }
 ```
 ```
-INSERT INTO `tilitili_schedule`.`tilitili_job`(`name`, `cron`, `status`, `create_time`, `update_time`) 
+INSERT INTO `tilitili_job`(`name`, `cron`, `status`, `create_time`, `update_time`) 
 VALUES ('testJob', '* * * * * ? ', 1, '2021-11-11 15:48:01', '2021-11-11 15:48:01');
 ```
 
