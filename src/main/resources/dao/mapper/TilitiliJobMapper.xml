@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tilitili.schedule.dao.mapper.TilitiliJobMapper">
+	<resultMap id="TilitiliJob" type="com.tilitili.schedule.entity.TilitiliJob">
+		<result  property="cron"  column="cron"/>
+		<result  property="updateTime"  column="update_time"/>
+		<result  property="createTime"  column="create_time"/>
+		<result  property="name"  column="name"/>
+		<result  property="id"  column="id"/>
+		<result  property="status"  column="status"/>
+	</resultMap>
+	<sql id="Base_Column_List">a.`cron`,a.`update_time`,a.`create_time`,a.`name`,a.`id`,a.`status`</sql>
+	<insert id="addTilitiliJobSelective" parameterType="com.tilitili.schedule.entity.TilitiliJob" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO tilitili_job
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="cron!= null" >`cron`,</if>
+			`update_time`,
+			`create_time`,
+			<if test="name!= null" >`name`,</if>
+			<if test="status!= null" >`status`,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="cron!= null" >#{cron},</if>
+			now(),
+			now(),
+			<if test="name!= null" >#{name},</if>
+			<if test="status!= null" >#{status},</if>
+		</trim>
+	</insert>
+	<update id="updateTilitiliJobSelective"  parameterType="com.tilitili.schedule.entity.TilitiliJob">
+		update tilitili_job <set>
+			<if test="cron!=null">`cron`=#{cron},</if>
+			`update_time`=now(),
+			<if test="name!=null">`name`=#{name},</if>
+			<if test="status!=null">`status`=#{status},</if>
+		</set>
+		where id=#{id}
+	</update>
+	<select id="countTilitiliJobByCondition"  parameterType="TilitiliJobQuery" resultType="java.lang.Integer">
+		select count(1) from tilitili_job a <where>
+			<if test="cron!=null">and `cron`=#{cron}</if>
+			<if test="updateTime!=null">and `update_time`=#{updateTime}</if>
+			<if test="createTime!=null">and `create_time`=#{createTime}</if>
+			<if test="name!=null">and `name`=#{name}</if>
+			<if test="id!=null">and `id`=#{id}</if>
+			<if test="status!=null">and `status`=#{status}</if>
+		</where>
+	</select>
+	<select id="getTilitiliJobByCondition"  parameterType="TilitiliJobQuery" resultMap="TilitiliJob">
+		select <include refid="Base_Column_List" /> from tilitili_job a <where>
+			<if test="cron!=null">and `cron`=#{cron}</if>
+			<if test="updateTime!=null">and `update_time`=#{updateTime}</if>
+			<if test="createTime!=null">and `create_time`=#{createTime}</if>
+			<if test="name!=null">and `name`=#{name}</if>
+			<if test="id!=null">and `id`=#{id}</if>
+			<if test="status!=null">and `status`=#{status}</if>
+		</where>
+		<if test="pageNo!=null and pageSize != null">limit #{start}, #{pageSize}</if>
+	</select>
+	<select id="getTilitiliJobByName" resultMap="TilitiliJob">
+		select <include refid="Base_Column_List" />
+		from tilitili_job a where name = #{name}
+	</select>
+	<select id="getTilitiliJobById" resultMap="TilitiliJob">
+		select <include refid="Base_Column_List" />
+		from tilitili_job a where id = #{id}
+	</select>
+</mapper>
