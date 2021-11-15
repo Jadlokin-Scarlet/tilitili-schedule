@@ -34,5 +34,6 @@ schedule.datasource.jdbcUrl=you mysql connect url
 schedule.datasource.username=you username
 schedule.datasource.password=you password
 ```
-4. 运行，打开
+4. 在启动类中添加 @EnableTilitiliJob 注解
+5. 运行，打开
 http://localhost:8080
