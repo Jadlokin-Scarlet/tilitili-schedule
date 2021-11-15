@@ -7,6 +7,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `tilitili_job`;
 CREATE TABLE `tilitili_job` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) NOT NULL COMMENT 'job标题',
   `name` varchar(50) NOT NULL COMMENT 'job名',
   `cron` varchar(20) NOT NULL COMMENT 'cron',
   `status` int(11) NOT NULL COMMENT '状态（-1：停用，0：就绪：1：启用）',

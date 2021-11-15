@@ -7,7 +7,6 @@ import club.tilitili.schedule.entity.query.TilitiliJobQuery;
 import club.tilitili.schedule.util.Asserts;
 import club.tilitili.schedule.entity.BaseModel;
 import club.tilitili.schedule.entity.PageModel;
-import club.tilitili.schedule.entity.TaskView;
 import club.tilitili.schedule.entity.TilitiliJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api")
@@ -32,12 +30,10 @@ public class JobController extends BaseController {
 
     @RequestMapping("/job/list")
     @ResponseBody
-    public BaseModel<PageModel<TaskView>> listJob(Integer current, Integer pageSize) {
+    public BaseModel<PageModel<TilitiliJob>> listJob(Integer current, Integer pageSize) {
         int total = tilitiliJobDAO.countTilitiliJobByCondition(new TilitiliJobQuery());
         List<TilitiliJob> jobList = tilitiliJobDAO.getTilitiliJobByCondition(new TilitiliJobQuery().setPageNo(current).setPageSize(pageSize));
-
-        List<TaskView> taskViewList = jobList.stream().map(TaskView::new).collect(Collectors.toList());
-        return PageModel.of(total, pageSize, current, taskViewList);
+        return PageModel.of(total, pageSize, current, jobList);
     }
 
     @RequestMapping("/job/start")
@@ -46,7 +42,7 @@ public class JobController extends BaseController {
         Asserts.notNull(name, "参数异常");
         tilitiliJobDAO.updateTilitiliJobByName(name, 1);
         Task task = scheduler.getTaskByName(name);
-        if (task == null) return BaseModel.success("已启动，但未找到可执行的任务。");
+        if (task == null) return BaseModel.success("已启动，但未找到任务。");
         task.start();
         return BaseModel.success();
     }
@@ -57,7 +53,7 @@ public class JobController extends BaseController {
         Asserts.notNull(name, "参数异常");
         tilitiliJobDAO.updateTilitiliJobByName(name, -1);
         Task task = scheduler.getTaskByName(name);
-        if (task == null) return BaseModel.success("已停止，但未找到可停止的任务。");
+        if (task == null) return BaseModel.success("已停止，但未找到任务。");
         task.stop();
         return BaseModel.success();
     }
@@ -74,23 +70,50 @@ public class JobController extends BaseController {
 
     @RequestMapping("/job/add")
     @ResponseBody
-    public BaseModel<?> addJob(TaskView taskView) {
-        Asserts.notNull(taskView, "参数异常");
-        Asserts.notNull(taskView.getName(), "参数异常");
-        Asserts.notNull(taskView.getCron(), "参数异常");
+    public BaseModel<?> addJob(TilitiliJob job) {
+        Asserts.notNull(job, "参数异常");
+        Asserts.notNull(job.getName(), "参数异常");
+        Asserts.notNull(job.getCron(), "参数异常");
 
-        TilitiliJob old = tilitiliJobDAO.getTilitiliJobByName(taskView.getName());
+        TilitiliJob old = tilitiliJobDAO.getTilitiliJobByName(job.getName());
         Asserts.checkNull(old, "名称重复");
 
-        TilitiliJob tilitiliJob = new TilitiliJob();
-        tilitiliJob.setName(taskView.getName());
-        tilitiliJob.setCron(taskView.getCron());
-        tilitiliJob.setStatus(0);
-        tilitiliJobDAO.addTilitiliJobSelective(tilitiliJob);
+        TilitiliJob addJob = new TilitiliJob();
+        addJob.setTitle(job.getTitle());
+        addJob.setName(job.getName());
+        addJob.setCron(job.getCron());
+        addJob.setStatus(0);
+        tilitiliJobDAO.addTilitiliJobSelective(addJob);
 
-        Task task = scheduler.getTaskByName(taskView.getName());
-        if (task == null) return BaseModel.success("已添加，但未找到可执行的任务。");
-        task.supplement(tilitiliJob);
+        Task task = scheduler.getTaskByName(job.getName());
+        if (task == null) return BaseModel.success("已添加，但未找到任务。");
+        task.supplement(addJob);
+        return BaseModel.success();
+    }
+
+    @RequestMapping("/job/edit")
+    @ResponseBody
+    public BaseModel<?> editJob(TilitiliJob job) {
+        Asserts.notNull(job, "参数异常");
+        Asserts.notNull(job.getName(), "参数异常");
+        Asserts.notNull(job.getCron(), "参数异常");
+
+        TilitiliJob old = tilitiliJobDAO.getTilitiliJobByName(job.getName());
+        Asserts.notNull(old, "找不到Job");
+
+        TilitiliJob upd = new TilitiliJob();
+        upd.setId(old.getId());
+        upd.setTitle(job.getTitle());
+        upd.setCron(job.getCron());
+        tilitiliJobDAO.updateTilitiliJobSelective(upd);
+
+        Task task = scheduler.getTaskByName(job.getName());
+        if (task == null) return BaseModel.success("已编辑，但未找到任务。");
+        task.supplement(upd);
+        if (old.getStatus() == 1) {
+            tilitiliJobDAO.updateTilitiliJobByName(job.getName(), 0);
+            task.stop();
+        }
         return BaseModel.success();
     }
 

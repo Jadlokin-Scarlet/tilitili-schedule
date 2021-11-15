@@ -11,6 +11,7 @@ public class TilitiliJob implements Serializable {
 	private Date createTime;
 	private String name;
 	private Long id;
+	private String title;
 	private Integer status;
 	public String getCron() { return cron; }
 	public TilitiliJob setCron(String cron) { this.cron = cron; return this; }
@@ -22,6 +23,8 @@ public class TilitiliJob implements Serializable {
 	public TilitiliJob setName(String name) { this.name = name; return this; }
 	public Long getId() { return id; }
 	public TilitiliJob setId(Long id) { this.id = id; return this; }
+	public String getTitle() { return title; }
+	public TilitiliJob setTitle(String title) { this.title = title; return this; }
 	public Integer getStatus() { return status; }
 	public TilitiliJob setStatus(Integer status) { this.status = status; return this; }
 }

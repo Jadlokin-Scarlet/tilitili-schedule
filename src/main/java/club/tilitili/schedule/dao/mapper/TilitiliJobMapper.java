@@ -1,9 +1,8 @@
 package club.tilitili.schedule.dao.mapper;
 
 import java.util.List;
-
-import club.tilitili.schedule.entity.query.TilitiliJobQuery;
 import org.apache.ibatis.annotations.Param;
+import club.tilitili.schedule.entity.query.TilitiliJobQuery;
 import club.tilitili.schedule.entity.TilitiliJob;
 
 public interface TilitiliJobMapper {

@@ -22,19 +22,16 @@ public class Task implements Runnable {
     private Date lastRunTime;
 
     private Long id;
+    private String title;
     private String name;
     private String cron;
     private Integer status;
 
     public Task(Runnable runnable, TilitiliJob tilitiliJob, ScheduledExecutorService scheduledExecutorService) {
-        this.id = tilitiliJob.getId();
-        this.name = tilitiliJob.getName();
-        this.cron = tilitiliJob.getCron();
-        this.status = tilitiliJob.getStatus();
-
-        this.sequenceGenerator = new CronSequenceGenerator(this.cron, TimeZone.getDefault());
         this.scheduledExecutorService = scheduledExecutorService;
         this.runnable = runnable;
+
+        supplement(tilitiliJob);
     }
 
     public Task(Runnable runnable, ScheduledExecutorService scheduledExecutorService) {
@@ -44,6 +41,7 @@ public class Task implements Runnable {
 
     public Task supplement(TilitiliJob tilitiliJob) {
         this.id = tilitiliJob.getId();
+        this.title = tilitiliJob.getTitle();
         this.name = tilitiliJob.getName();
         this.cron = tilitiliJob.getCron();
         this.status = tilitiliJob.getStatus();
@@ -87,6 +85,16 @@ public class Task implements Runnable {
         scheduler();
     }
 
+    public TilitiliJob getTilitiliJob() {
+        TilitiliJob tilitiliJob = new TilitiliJob();
+        tilitiliJob.setId(this.id);
+        tilitiliJob.setTitle(this.title);
+        tilitiliJob.setName(this.name);
+        tilitiliJob.setCron(this.cron);
+        tilitiliJob.setStatus(this.status);
+        return tilitiliJob;
+    }
+
     public String getName() {
         return name;
     }
@@ -105,6 +113,15 @@ public class Task implements Runnable {
 
     public Task setId(Long id) {
         this.id = id;
+        return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Task setTitle(String title) {
+        this.title = title;
         return this;
     }
 }

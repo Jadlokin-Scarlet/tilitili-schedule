@@ -6,6 +6,7 @@ public class TilitiliJobBaseQuery<T> extends BaseQuery<T> {
 	private Date createTime;
 	private String name;
 	private Long id;
+	private String title;
 	private Integer status;
 	public String getCron() { return cron; }
 	public T setCron(String cron) { this.cron = cron; return (T) this; }
@@ -17,6 +18,8 @@ public class TilitiliJobBaseQuery<T> extends BaseQuery<T> {
 	public T setName(String name) { this.name = name; return (T) this; }
 	public Long getId() { return id; }
 	public T setId(Long id) { this.id = id; return (T) this; }
+	public String getTitle() { return title; }
+	public T setTitle(String title) { this.title = title; return (T) this; }
 	public Integer getStatus() { return status; }
 	public T setStatus(Integer status) { this.status = status; return (T) this; }
 }

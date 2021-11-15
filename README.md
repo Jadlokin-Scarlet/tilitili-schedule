@@ -13,8 +13,8 @@ public class TestJob {
 }
 ```
 ```
-INSERT INTO `tilitili_job`(`name`, `cron`, `status`, `create_time`, `update_time`) 
-VALUES ('testJob', '* * * * * ? ', 1, '2021-11-11 15:48:01', '2021-11-11 15:48:01');
+INSERT INTO `tilitili_job`(`title`, `name`, `cron`, `status`, `create_time`, `update_time`) 
+VALUES ('测试Job', 'testJob', '* * * * * ? ', 1, '2021-11-11 15:48:01', '2021-11-11 15:48:01');
 ```
 
 ## 使用方式：
@@ -36,4 +36,4 @@ schedule.datasource.password=you password
 ```
 4. 在启动类中添加 @EnableTilitiliJob 注解
 5. 运行，打开
-http://localhost:8080
+http://localhost:{port}

@@ -6,9 +6,10 @@
 		<result  property="createTime"  column="create_time"/>
 		<result  property="name"  column="name"/>
 		<result  property="id"  column="id"/>
+		<result  property="title"  column="title"/>
 		<result  property="status"  column="status"/>
 	</resultMap>
-	<sql id="Base_Column_List">a.`cron`,a.`update_time`,a.`create_time`,a.`name`,a.`id`,a.`status`</sql>
+	<sql id="Base_Column_List">a.`cron`,a.`update_time`,a.`create_time`,a.`name`,a.`id`,a.`title`,a.`status`</sql>
 	<insert id="addTilitiliJobSelective" parameterType="club.tilitili.schedule.entity.TilitiliJob" keyProperty="id" useGeneratedKeys="true">
 		INSERT INTO tilitili_job
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -16,6 +17,7 @@
 			`update_time`,
 			`create_time`,
 			<if test="name!= null" >`name`,</if>
+			<if test="title!= null" >`title`,</if>
 			<if test="status!= null" >`status`,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -23,6 +25,7 @@
 			now(),
 			now(),
 			<if test="name!= null" >#{name},</if>
+			<if test="title!= null" >#{title},</if>
 			<if test="status!= null" >#{status},</if>
 		</trim>
 	</insert>
@@ -31,6 +34,7 @@
 			<if test="cron!=null">`cron`=#{cron},</if>
 			`update_time`=now(),
 			<if test="name!=null">`name`=#{name},</if>
+			<if test="title!=null">`title`=#{title},</if>
 			<if test="status!=null">`status`=#{status},</if>
 		</set>
 		where id=#{id}
@@ -42,6 +46,7 @@
 			<if test="createTime!=null">and `create_time`=#{createTime}</if>
 			<if test="name!=null">and `name`=#{name}</if>
 			<if test="id!=null">and `id`=#{id}</if>
+			<if test="title!=null">and `title`=#{title}</if>
 			<if test="status!=null">and `status`=#{status}</if>
 		</where>
 	</select>
@@ -52,6 +57,7 @@
 			<if test="createTime!=null">and `create_time`=#{createTime}</if>
 			<if test="name!=null">and `name`=#{name}</if>
 			<if test="id!=null">and `id`=#{id}</if>
+			<if test="title!=null">and `title`=#{title}</if>
 			<if test="status!=null">and `status`=#{status}</if>
 		</where>
 		<if test="pageNo!=null and pageSize != null">limit #{start}, #{pageSize}</if>
