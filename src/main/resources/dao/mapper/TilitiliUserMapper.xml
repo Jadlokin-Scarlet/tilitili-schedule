@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tilitili.schedule.dao.mapper.TilitiliUserMapper">
-	<resultMap id="TilitiliUser" type="com.tilitili.schedule.entity.TilitiliUser">
+<mapper namespace="club.tilitili.schedule.dao.mapper.TilitiliUserMapper">
+	<resultMap id="TilitiliUser" type="club.tilitili.schedule.entity.TilitiliUser">
 		<result  property="password"  column="password"/>
 		<result  property="updateTime"  column="update_time"/>
 		<result  property="createTime"  column="create_time"/>
@@ -9,7 +9,7 @@
 		<result  property="status"  column="status"/>
 	</resultMap>
 	<sql id="Base_Column_List">a.`password`,a.`update_time`,a.`create_time`,a.`user_name`,a.`id`,a.`status`</sql>
-	<insert id="addTilitiliUserSelective" parameterType="com.tilitili.schedule.entity.TilitiliUser" keyProperty="id" useGeneratedKeys="true">
+	<insert id="addTilitiliUserSelective" parameterType="club.tilitili.schedule.entity.TilitiliUser" keyProperty="id" useGeneratedKeys="true">
 		INSERT INTO tilitili_user
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="password!= null" >`password`,</if>
@@ -26,7 +26,7 @@
 			<if test="status!= null" >#{status},</if>
 		</trim>
 	</insert>
-	<update id="updateTilitiliUserSelective"  parameterType="com.tilitili.schedule.entity.TilitiliUser">
+	<update id="updateTilitiliUserSelective"  parameterType="club.tilitili.schedule.entity.TilitiliUser">
 		update tilitili_user <set>
 			<if test="password!=null">`password`=#{password},</if>
 			`update_time`=now(),

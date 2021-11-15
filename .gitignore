@@ -4,5 +4,5 @@
 *.log*
 /src/main/resources/application.properties
 /src/main/resources/log4j.properties
-/src/main/java/com/tilitili/schedule/autocode
-/src/main/java/com/tilitili/schedule/autocode/*
+/src/main/java/club/tilitili/schedule/autocode
+/src/main/java/club/tilitili/schedule/autocode/*
