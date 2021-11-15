@@ -23,7 +23,7 @@ VALUES ('测试Job', 'testJob', '* * * * * ? ', 1, '2021-11-11 15:48:01', '2021-
 <dependency>
     <groupId>club.tilitili</groupId>
     <artifactId>tilitili-schedule</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
 </dependency>
 ```
 2. 找一个mysql数据库，执行项目里的几个sql文件
