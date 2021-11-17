@@ -2,9 +2,10 @@ package club.tilitili.schedule.component;
 
 import org.apache.log4j.Logger;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class Executor implements Runnable {
+public class Executor {
     private static final Logger log = Logger.getLogger(Executor.class);
 
     private final Object bean;
@@ -15,12 +16,10 @@ public class Executor implements Runnable {
         this.method = method;
     }
 
-    @Override
-    public void run() {
-        try {
-            method.invoke(bean);
-        } catch (Exception e) {
-            log.error("Job 执行异常", e);
-        }
+
+    public Boolean run() throws InvocationTargetException, IllegalAccessException {
+        Object result = method.invoke(bean);
+        if (result == null) return null;
+        return (Boolean) result;
     }
 }

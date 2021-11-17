@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/api/job")
 public class JobController extends BaseController {
 
     private final Scheduler scheduler;
@@ -28,7 +28,7 @@ public class JobController extends BaseController {
         this.tilitiliJobDAO = tilitiliJobDAO;
     }
 
-    @RequestMapping("/job/list")
+    @RequestMapping("/list")
     @ResponseBody
     public BaseModel<PageModel<TilitiliJob>> listJob(Integer current, Integer pageSize) {
         int total = tilitiliJobDAO.countTilitiliJobByCondition(new TilitiliJobQuery());
@@ -36,7 +36,7 @@ public class JobController extends BaseController {
         return PageModel.of(total, pageSize, current, jobList);
     }
 
-    @RequestMapping("/job/start")
+    @RequestMapping("/start")
     @ResponseBody
     public BaseModel<?> startJob(String name) {
         Asserts.notNull(name, "参数异常");
@@ -47,7 +47,7 @@ public class JobController extends BaseController {
         return BaseModel.success();
     }
 
-    @RequestMapping("/job/stop")
+    @RequestMapping("/stop")
     @ResponseBody
     public BaseModel<?> stopJob(String name) {
         Asserts.notNull(name, "参数异常");
@@ -58,7 +58,7 @@ public class JobController extends BaseController {
         return BaseModel.success();
     }
 
-    @RequestMapping("/job/run")
+    @RequestMapping("/run")
     @ResponseBody
     public BaseModel<?> runJob(String name) {
         Asserts.notNull(name, "参数异常");
@@ -68,7 +68,7 @@ public class JobController extends BaseController {
         return BaseModel.success();
     }
 
-    @RequestMapping("/job/add")
+    @RequestMapping("/add")
     @ResponseBody
     public BaseModel<?> addJob(TilitiliJob job) {
         Asserts.notNull(job, "参数异常");
@@ -91,7 +91,7 @@ public class JobController extends BaseController {
         return BaseModel.success();
     }
 
-    @RequestMapping("/job/edit")
+    @RequestMapping("/edit")
     @ResponseBody
     public BaseModel<?> editJob(TilitiliJob job) {
         Asserts.notNull(job, "参数异常");
