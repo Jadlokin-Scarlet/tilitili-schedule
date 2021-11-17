@@ -4,7 +4,7 @@ public class BaseQuery<T> {
 	private Integer pageSize;
 	private String sorter;
 	private String sorted;
-	public Integer getStart() { return (pageNo - 1) * pageSize; }
+	public Integer getStart() { return pageNo != null && pageSize != null? (pageNo - 1) * pageSize: null; }
 
 	public Integer getPageNo() { return pageNo; }
 	public T setPageNo(Integer pageNo) { this.pageNo = pageNo;return (T) this; }

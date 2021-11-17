@@ -39,8 +39,8 @@ public class JobAspect implements BeanPostProcessor {
     private void processJob(Job job, Method method, Object bean) {
         Method invocableMethod = AopUtils.selectInvocableMethod(method, bean.getClass());
         invocableMethod.setAccessible(true);
-        Runnable runnable = new Executor(bean, invocableMethod);
-        scheduler.addCronScheduler(runnable, job.name());
+        Executor executor = new Executor(bean, invocableMethod);
+        scheduler.addCronScheduler(executor, job.name());
     }
 
 }

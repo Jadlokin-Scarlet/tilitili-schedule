@@ -14,7 +14,10 @@ public class TestJob {
 ```
 ```
 INSERT INTO `tilitili_job`(`title`, `name`, `cron`, `status`, `create_time`, `update_time`) 
-VALUES ('测试Job', 'testJob', '* * * * * ? ', 1, '2021-11-11 15:48:01', '2021-11-11 15:48:01');
+VALUES ('测试Job', 'testJob', '* * * * * ? ', 1, now(), now());
+
+INSERT INTO `tilitili_schedule`.`tilitili_user`(`user_name`, `password`, `status`, `create_time`, `update_time`) VALUES 
+('admin', 'pass', 0, now(), now());
 ```
 
 ## 使用方式：
@@ -23,7 +26,7 @@ VALUES ('测试Job', 'testJob', '* * * * * ? ', 1, '2021-11-11 15:48:01', '2021-
 <dependency>
     <groupId>club.tilitili</groupId>
     <artifactId>tilitili-schedule</artifactId>
-    <version>1.3</version>
+    <version>1.4</version>
 </dependency>
 ```
 2. 找一个mysql数据库，执行项目里的几个sql文件

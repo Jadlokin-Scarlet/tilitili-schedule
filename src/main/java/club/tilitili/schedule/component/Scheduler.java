@@ -1,6 +1,7 @@
 package club.tilitili.schedule.component;
 
 import club.tilitili.schedule.dao.TilitiliJobDAO;
+import club.tilitili.schedule.dao.TilitiliLogDAO;
 import club.tilitili.schedule.entity.TilitiliJob;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +20,22 @@ public class Scheduler {
 
     private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(10);
     private final TilitiliJobDAO tilitiliJobDAO;
+    private final TilitiliLogDAO tilitiliLogDAO;
     private final Map<String, Task> taskMap = new HashMap<>();
 
     @Autowired
-    public Scheduler(TilitiliJobDAO tilitiliJobDAO) {
+    public Scheduler(TilitiliJobDAO tilitiliJobDAO, TilitiliLogDAO tilitiliLogDAO) {
         this.tilitiliJobDAO = tilitiliJobDAO;
+        this.tilitiliLogDAO = tilitiliLogDAO;
     }
 
-    public void addCronScheduler(Runnable runnable, String name) {
+    public void addCronScheduler(Executor executor, String name) {
         TilitiliJob tilitiliJob = tilitiliJobDAO.getTilitiliJobByName(name);
         if (tilitiliJob == null) {
-            taskMap.put(name, new Task(runnable, scheduledExecutorService));
+            taskMap.put(name, new Task(executor, scheduledExecutorService, tilitiliLogDAO));
             log.info(String.format("Job[%s]未登记，启动失败", name));
         } else {
-            taskMap.put(name, new Task(runnable, tilitiliJob, scheduledExecutorService).scheduler());
+            taskMap.put(name, new Task(executor, tilitiliJob, scheduledExecutorService, tilitiliLogDAO).scheduler());
         }
     }
 

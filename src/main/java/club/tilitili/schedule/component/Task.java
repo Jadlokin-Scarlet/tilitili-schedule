@@ -1,6 +1,9 @@
 package club.tilitili.schedule.component;
 
+import club.tilitili.schedule.dao.TilitiliLogDAO;
 import club.tilitili.schedule.entity.TilitiliJob;
+import club.tilitili.schedule.entity.TilitiliLog;
+import club.tilitili.schedule.util.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.scheduling.support.CronSequenceGenerator;
 
@@ -14,8 +17,9 @@ import java.util.concurrent.TimeUnit;
 public class Task implements Runnable {
     private static final Logger log = Logger.getLogger(Task.class);
 
+    private final TilitiliLogDAO tilitiliLogDAO;
     private final ScheduledExecutorService scheduledExecutorService;
-    private final Runnable runnable;
+    private final Executor executor;
 
     private CronSequenceGenerator sequenceGenerator;
     private ScheduledFuture<?> future;
@@ -27,16 +31,18 @@ public class Task implements Runnable {
     private String cron;
     private Integer status;
 
-    public Task(Runnable runnable, TilitiliJob tilitiliJob, ScheduledExecutorService scheduledExecutorService) {
+    public Task(Executor executor, TilitiliJob tilitiliJob, ScheduledExecutorService scheduledExecutorService, TilitiliLogDAO tilitiliLogDAO) {
+        this.tilitiliLogDAO = tilitiliLogDAO;
         this.scheduledExecutorService = scheduledExecutorService;
-        this.runnable = runnable;
+        this.executor = executor;
 
         supplement(tilitiliJob);
     }
 
-    public Task(Runnable runnable, ScheduledExecutorService scheduledExecutorService) {
+    public Task(Executor executor, ScheduledExecutorService scheduledExecutorService, TilitiliLogDAO tilitiliLogDAO) {
+        this.tilitiliLogDAO = tilitiliLogDAO;
         this.scheduledExecutorService = scheduledExecutorService;
-        this.runnable = runnable;
+        this.executor = executor;
     }
 
     public Task supplement(TilitiliJob tilitiliJob) {
@@ -65,8 +71,7 @@ public class Task implements Runnable {
     }
 
     public void runOne() {
-        this.lastRunTime = new Date();
-        runnable.run();
+        _run();
     }
 
     public Task scheduler() {
@@ -80,9 +85,29 @@ public class Task implements Runnable {
 
     @Override
     public void run() {
-        this.lastRunTime = new Date();
-        runnable.run();
+        _run();
         scheduler();
+    }
+
+    private void _run() {
+        this.lastRunTime = new Date();
+        try {
+            Boolean success = Optional.ofNullable(executor.run()).orElse(false);
+
+            TilitiliLog addLog = new TilitiliLog();
+            addLog.setName(this.name);
+            addLog.setSuccess(success);
+            addLog.setRunTime(this.lastRunTime);
+            tilitiliLogDAO.addTilitiliLogSelective(addLog);
+        } catch (Exception e) {
+            log.error("job run error", e);
+            TilitiliLog addLog = new TilitiliLog();
+            addLog.setName(this.name);
+            addLog.setSuccess(false);
+            addLog.setRunTime(this.lastRunTime);
+            addLog.setFailReason(ExceptionUtils.getStackTrace(e));
+            tilitiliLogDAO.addTilitiliLogSelective(addLog);
+        }
     }
 
     public TilitiliJob getTilitiliJob() {

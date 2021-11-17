@@ -1,6 +1,3 @@
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
-
 -- ----------------------------
 -- Table structure for tilitili_user
 -- ----------------------------
@@ -13,6 +10,4 @@ CREATE TABLE `tilitili_user` (
   `create_time` datetime NOT NULL,
   `update_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
-
-SET FOREIGN_KEY_CHECKS = 1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
