@@ -108,10 +108,11 @@ public class JobController extends BaseController {
         tilitiliJobDAO.updateTilitiliJobSelective(upd);
 
         Task task = scheduler.getTaskByName(job.getName());
+        TilitiliJob newJob = tilitiliJobDAO.getTilitiliJobById(upd.getId());
         if (task == null) return BaseModel.success("已编辑，但未找到任务。");
-        task.supplement(upd);
-        if (old.getStatus() == 1) {
-            tilitiliJobDAO.updateTilitiliJobByName(job.getName(), 0);
+        task.supplement(newJob);
+        if (newJob.getStatus() == 1) {
+            tilitiliJobDAO.updateTilitiliJobByName(newJob.getName(), 0);
             task.stop();
         }
         return BaseModel.success();
