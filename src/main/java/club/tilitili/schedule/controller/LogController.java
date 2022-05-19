@@ -26,9 +26,9 @@ public class LogController extends BaseController {
 
     @RequestMapping("/list")
     @ResponseBody
-    public BaseModel<PageModel<TilitiliLog>> listJob(Integer current, Integer pageSize) {
-        int total = tilitiliLogDAO.countTilitiliLogByCondition(new TilitiliLogQuery());
-        List<TilitiliLog> logList = tilitiliLogDAO.getTilitiliLogByCondition(new TilitiliLogQuery().setPageNo(current).setPageSize(pageSize).setSorter("id").setSorted("desc"));
-        return PageModel.of(total, pageSize, current, logList);
+    public BaseModel<PageModel<TilitiliLog>> listJob(TilitiliLogQuery query) {
+        int total = tilitiliLogDAO.countTilitiliLogByCondition(query);
+        List<TilitiliLog> logList = tilitiliLogDAO.getTilitiliLogByCondition(query.setSorter("id").setSorted("desc"));
+        return PageModel.of(total, query.getPageSize(), query.getPageNo(), logList);
     }
 }

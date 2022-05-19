@@ -5,6 +5,7 @@ import club.tilitili.schedule.entity.TilitiliJob;
 import club.tilitili.schedule.entity.TilitiliLog;
 import club.tilitili.schedule.util.ExceptionUtils;
 import org.apache.log4j.Logger;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.support.CronSequenceGenerator;
 
 import java.util.Date;
@@ -70,6 +71,7 @@ public class Task implements Runnable {
         this.future.cancel(true);
     }
 
+    @Async
     public void runOne() {
         _run();
     }
