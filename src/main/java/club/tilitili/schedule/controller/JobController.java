@@ -48,7 +48,7 @@ public class JobController extends BaseController {
             item.setStatus(job.getStatus());
             if (task == null) {
                 item.setRunStatus("不存在");
-            } else if (task.hasRunning()) {
+            } else if (!task.hasRunning()) {
                 item.setRunStatus("未运行");
             } else if (task.isDone()) {
                 item.setRunStatus("已中断");
