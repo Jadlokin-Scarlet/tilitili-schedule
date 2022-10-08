@@ -3,16 +3,18 @@ package club.tilitili.schedule.controller;
 import club.tilitili.schedule.component.Scheduler;
 import club.tilitili.schedule.component.Task;
 import club.tilitili.schedule.dao.TilitiliJobDAO;
-import club.tilitili.schedule.entity.query.TilitiliJobQuery;
-import club.tilitili.schedule.util.Asserts;
 import club.tilitili.schedule.entity.BaseModel;
 import club.tilitili.schedule.entity.PageModel;
 import club.tilitili.schedule.entity.TilitiliJob;
+import club.tilitili.schedule.entity.TilitiliJobDTO;
+import club.tilitili.schedule.entity.query.TilitiliJobQuery;
+import club.tilitili.schedule.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -30,10 +32,30 @@ public class JobController extends BaseController {
 
     @RequestMapping("/list")
     @ResponseBody
-    public BaseModel<PageModel<TilitiliJob>> listJob(Integer current, Integer pageSize) {
+    public BaseModel<PageModel<TilitiliJobDTO>> listJob(Integer current, Integer pageSize) {
         int total = tilitiliJobDAO.countTilitiliJobByCondition(new TilitiliJobQuery());
         List<TilitiliJob> jobList = tilitiliJobDAO.getTilitiliJobByCondition(new TilitiliJobQuery().setPageNo(current).setPageSize(pageSize));
-        return PageModel.of(total, pageSize, current, jobList);
+        List<TilitiliJobDTO> result = new ArrayList<>();
+        for (TilitiliJob job : jobList) {
+            Task task = scheduler.getTaskByName(job.getName());
+            TilitiliJobDTO item = new TilitiliJobDTO();
+            item.setId(job.getId());
+            item.setCron(job.getCron());
+            item.setUpdateTime(job.getUpdateTime());
+            item.setCreateTime(job.getCreateTime());
+            item.setName(job.getName());
+            item.setTitle(job.getTitle());
+            item.setStatus(job.getStatus());
+            if (task == null) {
+                item.setRunStatus("不存在");
+            } else if (task.isDone()) {
+                item.setRunStatus("已中断");
+            } else {
+                item.setRunStatus("运行中");
+            }
+            result.add(item);
+        }
+        return PageModel.of(total, pageSize, current, result);
     }
 
     @RequestMapping("/start")

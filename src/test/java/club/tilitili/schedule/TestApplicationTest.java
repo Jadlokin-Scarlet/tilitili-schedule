@@ -4,6 +4,7 @@ import club.tilitili.schedule.controller.JobController;
 import club.tilitili.schedule.entity.BaseModel;
 import club.tilitili.schedule.entity.PageModel;
 import club.tilitili.schedule.entity.TilitiliJob;
+import club.tilitili.schedule.entity.TilitiliJobDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +20,7 @@ class TestApplicationTest {
 
     @Test
     public void test() {
-        BaseModel<PageModel<TilitiliJob>> data = jobController.listJob(1, 10);
+        BaseModel<PageModel<TilitiliJobDTO>> data = jobController.listJob(1, 10);
         System.out.println("?");
     }
 
