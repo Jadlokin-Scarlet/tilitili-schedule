@@ -77,10 +77,14 @@ public class Task implements Runnable {
     }
 
     public Task scheduler() {
-        if (this.status == 1) {
-            Date lastRunTime = this.sequenceGenerator.next(Optional.ofNullable(this.lastRunTime).orElse(new Date()));
-            long nextTime = lastRunTime.getTime() - System.currentTimeMillis();
-            this.future = scheduledExecutorService.schedule(this, nextTime, TimeUnit.MILLISECONDS);
+        try {
+            if (this.status == 1) {
+                Date lastRunTime = this.sequenceGenerator.next(Optional.ofNullable(this.lastRunTime).orElse(new Date()));
+                long nextTime = lastRunTime.getTime() - System.currentTimeMillis();
+                this.future = scheduledExecutorService.schedule(this, nextTime, TimeUnit.MILLISECONDS);
+            }
+        } catch (Exception e) {
+            log.error("加载任务异常", e);
         }
         return this;
     }
@@ -89,6 +93,10 @@ public class Task implements Runnable {
     public void run() {
         _run();
         scheduler();
+    }
+
+    public boolean isDone() {
+        return !this.future.isDone();
     }
 
     private void _run() {
