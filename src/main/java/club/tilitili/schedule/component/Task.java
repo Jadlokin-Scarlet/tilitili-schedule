@@ -100,7 +100,7 @@ public class Task implements Runnable {
     }
 
     public boolean isDone() {
-        return !this.future.isDone();
+        return this.future.isDone();
     }
 
     private void _run() {
