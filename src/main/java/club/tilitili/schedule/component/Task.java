@@ -95,6 +95,10 @@ public class Task implements Runnable {
         scheduler();
     }
 
+    public boolean hasRunning() {
+        return this.future != null;
+    }
+
     public boolean isDone() {
         return !this.future.isDone();
     }
