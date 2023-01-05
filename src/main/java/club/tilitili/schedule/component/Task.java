@@ -77,11 +77,15 @@ public class Task implements Runnable {
     }
 
     public Task scheduler() {
+        log.info(String.format("%s start scheduler", name));
         try {
             if (this.status == 1) {
                 Date lastRunTime = this.sequenceGenerator.next(Optional.ofNullable(this.lastRunTime).orElse(new Date()));
                 long nextTime = lastRunTime.getTime() - System.currentTimeMillis();
                 this.future = scheduledExecutorService.schedule(this, nextTime, TimeUnit.MILLISECONDS);
+                log.info(String.format("%s scheduler in %s", name, nextTime));
+            } else {
+                log.info(String.format("%s stop scheduler", name));
             }
         } catch (Exception e) {
             log.error("加载任务异常", e);
@@ -104,6 +108,7 @@ public class Task implements Runnable {
     }
 
     private void _run() {
+        log.info(String.format("%s start", name));
         this.lastRunTime = new Date();
         try {
             Boolean success = Optional.ofNullable(executor.run()).orElse(false);
@@ -122,6 +127,7 @@ public class Task implements Runnable {
             addLog.setFailReason(ExceptionUtils.getStackTrace(e));
             tilitiliLogDAO.addTilitiliLogSelective(addLog);
         }
+        log.info(String.format("%s end", name));
     }
 
     public TilitiliJob getTilitiliJob() {
