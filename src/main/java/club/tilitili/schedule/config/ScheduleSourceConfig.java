@@ -1,9 +1,11 @@
 package club.tilitili.schedule.config;
 
+import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -31,6 +33,7 @@ public class ScheduleSourceConfig {
     @Bean
     @Qualifier("scheduleSqlSessionFactory")
     public SqlSessionFactory scheduleSqlSessionFactory(@Qualifier("scheduleDataSource") DataSource dataSource) throws Exception {
+        VFS.addImplClass(SpringBootVFS.class);
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         List<Resource> list = new ArrayList<>();
