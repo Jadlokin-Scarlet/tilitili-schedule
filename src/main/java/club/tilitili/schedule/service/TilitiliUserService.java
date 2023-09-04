@@ -1,7 +1,7 @@
 package club.tilitili.schedule.service;
 
 import club.tilitili.schedule.entity.TilitiliUser;
-import club.tilitili.schedule.mapper.mysql.TilitiliUserMapper;
+import club.tilitili.schedule.mapper.schedule.TilitiliUserMapper;
 import club.tilitili.schedule.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

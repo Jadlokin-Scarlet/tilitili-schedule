@@ -4,7 +4,7 @@ import club.tilitili.schedule.entity.BaseModel;
 import club.tilitili.schedule.entity.PageModel;
 import club.tilitili.schedule.entity.TilitiliLog;
 import club.tilitili.schedule.entity.query.TilitiliLogQuery;
-import club.tilitili.schedule.mapper.mysql.TilitiliLogMapper;
+import club.tilitili.schedule.mapper.schedule.TilitiliLogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

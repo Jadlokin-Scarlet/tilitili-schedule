@@ -6,7 +6,7 @@ import club.tilitili.schedule.entity.PageModel;
 import club.tilitili.schedule.entity.TilitiliJob;
 import club.tilitili.schedule.entity.TilitiliJobDTO;
 import club.tilitili.schedule.entity.query.TilitiliJobQuery;
-import club.tilitili.schedule.mapper.mysql.TilitiliJobMapper;
+import club.tilitili.schedule.mapper.schedule.TilitiliJobMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -3,7 +3,7 @@ package club.tilitili.schedule.service;
 import club.tilitili.schedule.entity.TilitiliJob;
 import club.tilitili.schedule.entity.query.TilitiliJobQuery;
 import club.tilitili.schedule.entity.view.ResourceView;
-import club.tilitili.schedule.mapper.mysql.TilitiliJobMapper;
+import club.tilitili.schedule.mapper.schedule.TilitiliJobMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

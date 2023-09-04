@@ -2,7 +2,7 @@ package club.tilitili.schedule.component;
 
 import club.tilitili.schedule.entity.TilitiliJob;
 import club.tilitili.schedule.entity.TilitiliLog;
-import club.tilitili.schedule.mapper.mysql.TilitiliLogMapper;
+import club.tilitili.schedule.mapper.schedule.TilitiliLogMapper;
 import club.tilitili.schedule.util.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.scheduling.annotation.Async;
