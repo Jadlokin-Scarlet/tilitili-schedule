@@ -1,8 +1,8 @@
 package club.tilitili.schedule.component;
 
-import club.tilitili.schedule.dao.TilitiliLogDAO;
 import club.tilitili.schedule.entity.TilitiliJob;
 import club.tilitili.schedule.entity.TilitiliLog;
+import club.tilitili.schedule.mapper.mysql.TilitiliLogMapper;
 import club.tilitili.schedule.util.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.scheduling.annotation.Async;
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class Task implements Runnable {
     private static final Logger log = Logger.getLogger(Task.class);
 
-    private final TilitiliLogDAO tilitiliLogDAO;
+    private final TilitiliLogMapper tilitiliLogMapper;
     private final ScheduledExecutorService scheduledExecutorService;
     private final Executor executor;
 
@@ -32,16 +32,16 @@ public class Task implements Runnable {
     private String cron;
     private Integer status;
 
-    public Task(Executor executor, TilitiliJob tilitiliJob, ScheduledExecutorService scheduledExecutorService, TilitiliLogDAO tilitiliLogDAO) {
-        this.tilitiliLogDAO = tilitiliLogDAO;
+    public Task(Executor executor, TilitiliJob tilitiliJob, ScheduledExecutorService scheduledExecutorService, TilitiliLogMapper tilitiliLogMapper) {
+        this.tilitiliLogMapper = tilitiliLogMapper;
         this.scheduledExecutorService = scheduledExecutorService;
         this.executor = executor;
 
         supplement(tilitiliJob);
     }
 
-    public Task(Executor executor, ScheduledExecutorService scheduledExecutorService, TilitiliLogDAO tilitiliLogDAO) {
-        this.tilitiliLogDAO = tilitiliLogDAO;
+    public Task(Executor executor, ScheduledExecutorService scheduledExecutorService, TilitiliLogMapper tilitiliLogMapper) {
+        this.tilitiliLogMapper = tilitiliLogMapper;
         this.scheduledExecutorService = scheduledExecutorService;
         this.executor = executor;
     }
@@ -117,7 +117,7 @@ public class Task implements Runnable {
             addLog.setName(this.name);
             addLog.setSuccess(success);
             addLog.setRunTime(this.lastRunTime);
-            tilitiliLogDAO.addTilitiliLogSelective(addLog);
+            tilitiliLogMapper.addTilitiliLogSelective(addLog);
         } catch (Exception e) {
             log.error("job run error", e);
             TilitiliLog addLog = new TilitiliLog();
@@ -125,7 +125,7 @@ public class Task implements Runnable {
             addLog.setSuccess(false);
             addLog.setRunTime(this.lastRunTime);
             addLog.setFailReason(ExceptionUtils.getStackTrace(e));
-            tilitiliLogDAO.addTilitiliLogSelective(addLog);
+            tilitiliLogMapper.addTilitiliLogSelective(addLog);
         }
         log.info(String.format("%s end", name));
     }

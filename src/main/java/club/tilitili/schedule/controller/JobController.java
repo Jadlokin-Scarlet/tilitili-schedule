@@ -2,12 +2,12 @@ package club.tilitili.schedule.controller;
 
 import club.tilitili.schedule.component.Scheduler;
 import club.tilitili.schedule.component.Task;
-import club.tilitili.schedule.dao.TilitiliJobDAO;
 import club.tilitili.schedule.entity.BaseModel;
 import club.tilitili.schedule.entity.PageModel;
 import club.tilitili.schedule.entity.TilitiliJob;
 import club.tilitili.schedule.entity.TilitiliJobDTO;
 import club.tilitili.schedule.entity.query.TilitiliJobQuery;
+import club.tilitili.schedule.mapper.mysql.TilitiliJobMapper;
 import club.tilitili.schedule.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,19 +22,19 @@ import java.util.List;
 public class JobController extends BaseController {
 
     private final Scheduler scheduler;
-    private final TilitiliJobDAO tilitiliJobDAO;
+    private final TilitiliJobMapper tilitiliJobMapper;
 
     @Autowired
-    public JobController(Scheduler scheduler, TilitiliJobDAO tilitiliJobDAO) {
+    public JobController(Scheduler scheduler, TilitiliJobMapper tilitiliJobMapper) {
         this.scheduler = scheduler;
-        this.tilitiliJobDAO = tilitiliJobDAO;
+        this.tilitiliJobMapper = tilitiliJobMapper;
     }
 
     @RequestMapping("/list")
     @ResponseBody
     public BaseModel<PageModel<TilitiliJobDTO>> listJob(Integer current, Integer pageSize) {
-        int total = tilitiliJobDAO.countTilitiliJobByCondition(new TilitiliJobQuery());
-        List<TilitiliJob> jobList = tilitiliJobDAO.getTilitiliJobByCondition(new TilitiliJobQuery().setPageNo(current).setPageSize(pageSize));
+        int total = tilitiliJobMapper.countTilitiliJobByCondition(new TilitiliJobQuery());
+        List<TilitiliJob> jobList = tilitiliJobMapper.getTilitiliJobByCondition(new TilitiliJobQuery().setPageNo(current).setPageSize(pageSize));
         List<TilitiliJobDTO> result = new ArrayList<>();
         for (TilitiliJob job : jobList) {
             Task task = scheduler.getTaskByName(job.getName());
@@ -64,7 +64,7 @@ public class JobController extends BaseController {
     @ResponseBody
     public BaseModel<?> startJob(String name) {
         Asserts.notNull(name, "参数异常");
-        tilitiliJobDAO.updateTilitiliJobByName(name, 1);
+        tilitiliJobMapper.updateTilitiliJobByName(name, 1);
         Task task = scheduler.getTaskByName(name);
         if (task == null) return BaseModel.success("已启动，但未找到任务。");
         task.start();
@@ -75,7 +75,7 @@ public class JobController extends BaseController {
     @ResponseBody
     public BaseModel<?> stopJob(String name) {
         Asserts.notNull(name, "参数异常");
-        tilitiliJobDAO.updateTilitiliJobByName(name, -1);
+        tilitiliJobMapper.updateTilitiliJobByName(name, -1);
         Task task = scheduler.getTaskByName(name);
         if (task == null) return BaseModel.success("已停止，但未找到任务。");
         task.stop();
@@ -99,7 +99,7 @@ public class JobController extends BaseController {
         Asserts.notNull(job.getName(), "参数异常");
         Asserts.notNull(job.getCron(), "参数异常");
 
-        TilitiliJob old = tilitiliJobDAO.getTilitiliJobByName(job.getName());
+        TilitiliJob old = tilitiliJobMapper.getTilitiliJobByName(job.getName());
         Asserts.checkNull(old, "名称重复");
 
         TilitiliJob addJob = new TilitiliJob();
@@ -107,7 +107,7 @@ public class JobController extends BaseController {
         addJob.setName(job.getName());
         addJob.setCron(job.getCron());
         addJob.setStatus(0);
-        tilitiliJobDAO.addTilitiliJobSelective(addJob);
+        tilitiliJobMapper.addTilitiliJobSelective(addJob);
 
         Task task = scheduler.getTaskByName(job.getName());
         if (task == null) return BaseModel.success("已添加，但未找到任务。");
@@ -122,21 +122,21 @@ public class JobController extends BaseController {
         Asserts.notNull(job.getName(), "参数异常");
         Asserts.notNull(job.getCron(), "参数异常");
 
-        TilitiliJob old = tilitiliJobDAO.getTilitiliJobByName(job.getName());
+        TilitiliJob old = tilitiliJobMapper.getTilitiliJobByName(job.getName());
         Asserts.notNull(old, "找不到Job");
 
         TilitiliJob upd = new TilitiliJob();
         upd.setId(old.getId());
         upd.setTitle(job.getTitle());
         upd.setCron(job.getCron());
-        tilitiliJobDAO.updateTilitiliJobSelective(upd);
+        tilitiliJobMapper.updateTilitiliJobSelective(upd);
 
         Task task = scheduler.getTaskByName(job.getName());
-        TilitiliJob newJob = tilitiliJobDAO.getTilitiliJobById(upd.getId());
+        TilitiliJob newJob = tilitiliJobMapper.getTilitiliJobById(upd.getId());
         if (task == null) return BaseModel.success("已编辑，但未找到任务。");
         task.supplement(newJob);
         if (newJob.getStatus() == 1) {
-            tilitiliJobDAO.updateTilitiliJobByName(newJob.getName(), 0);
+            tilitiliJobMapper.updateTilitiliJobByName(newJob.getName(), 0);
             task.stop();
         }
         return BaseModel.success();

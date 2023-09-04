@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@MapperScan(basePackages = {"club.tilitili.schedule.dao"}, sqlSessionTemplateRef  = "scheduleSqlSessionTemplate")
+@ConditionalOnProperty(name = "schedule.datasource.jdbcUrl")
+@MapperScan(basePackages = {"club.tilitili.schedule.mapper.mysql"}, sqlSessionTemplateRef  = "scheduleSqlSessionTemplate")
 public class ScheduleSourceConfig {
     @Bean
     @ConfigurationProperties(prefix = "schedule.datasource")
@@ -37,14 +39,11 @@ public class ScheduleSourceConfig {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         List<Resource> list = new ArrayList<>();
-        list.addAll(Arrays.asList(new PathMatchingResourcePatternResolver().getResources("classpath:dao/*.xml")));
-        list.addAll(Arrays.asList(new PathMatchingResourcePatternResolver().getResources("classpath:dao/mapper/*.xml")));
+        list.addAll(Arrays.asList(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/mysql/*.xml")));
+        list.addAll(Arrays.asList(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/mysql/automapper/*.xml")));
         bean.setMapperLocations(list.toArray(new Resource[]{}));
-        bean.setTypeAliasesPackage("club.tilitili.schedule.entity");
 
-        SqlSessionFactory sqlSessionFactory = bean.getObject();
-        sqlSessionFactory.getConfiguration().setMapUnderscoreToCamelCase(true);
-        return sqlSessionFactory;
+        return bean.getObject();
     }
 
     @Bean

@@ -1,7 +1,7 @@
 package club.tilitili.schedule.service;
 
-import club.tilitili.schedule.dao.TilitiliUserDAO;
 import club.tilitili.schedule.entity.TilitiliUser;
+import club.tilitili.schedule.mapper.mysql.TilitiliUserMapper;
 import club.tilitili.schedule.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,15 +13,15 @@ import java.util.Objects;
 @Service
 public class TilitiliUserService {
 
-    private final TilitiliUserDAO tilitiliUserDAO;
+    private final TilitiliUserMapper tilitiliUserMapper;
 
     @Autowired
-    public TilitiliUserService(TilitiliUserDAO tilitiliUserDAO) {
-        this.tilitiliUserDAO = tilitiliUserDAO;
+    public TilitiliUserService(TilitiliUserMapper tilitiliUserMapper) {
+        this.tilitiliUserMapper = tilitiliUserMapper;
     }
 
     public TilitiliUser login(String userName, String password) {
-        TilitiliUser tilitiliUser = tilitiliUserDAO.getByName(userName);
+        TilitiliUser tilitiliUser = tilitiliUserMapper.getByName(userName);
         Asserts.isTrue(tilitiliUser != null, "账号不存在");
         Assert.isTrue(Objects.equals(DigestUtils.md5DigestAsHex(password.getBytes()), tilitiliUser.getPassword()), "密码错误");
         return tilitiliUser;
