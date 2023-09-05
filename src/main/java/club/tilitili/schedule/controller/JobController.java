@@ -1,7 +1,6 @@
 package club.tilitili.schedule.controller;
 
 import club.tilitili.schedule.component.Scheduler;
-import club.tilitili.schedule.component.Task;
 import club.tilitili.schedule.entity.BaseModel;
 import club.tilitili.schedule.entity.PageModel;
 import club.tilitili.schedule.entity.TilitiliJob;
@@ -37,7 +36,7 @@ public class JobController extends BaseController {
         List<TilitiliJob> jobList = tilitiliJobMapper.getTilitiliJobByCondition(new TilitiliJobQuery().setPageNo(current).setPageSize(pageSize));
         List<TilitiliJobDTO> result = new ArrayList<>();
         for (TilitiliJob job : jobList) {
-            Task task = scheduler.getTaskByName(job.getName());
+            Scheduler.Task task = scheduler.getTaskByName(job.getName());
             TilitiliJobDTO item = new TilitiliJobDTO();
             item.setId(job.getId());
             item.setCron(job.getCron());
@@ -65,7 +64,7 @@ public class JobController extends BaseController {
     public BaseModel<?> startJob(String name) {
         Asserts.notNull(name, "参数异常");
         tilitiliJobMapper.updateTilitiliJobByName(name, 1);
-        Task task = scheduler.getTaskByName(name);
+        Scheduler.Task task = scheduler.getTaskByName(name);
         if (task == null) return BaseModel.success("已启动，但未找到任务。");
         task.start();
         return BaseModel.success();
@@ -76,7 +75,7 @@ public class JobController extends BaseController {
     public BaseModel<?> stopJob(String name) {
         Asserts.notNull(name, "参数异常");
         tilitiliJobMapper.updateTilitiliJobByName(name, -1);
-        Task task = scheduler.getTaskByName(name);
+        Scheduler.Task task = scheduler.getTaskByName(name);
         if (task == null) return BaseModel.success("已停止，但未找到任务。");
         task.stop();
         return BaseModel.success();
@@ -86,7 +85,7 @@ public class JobController extends BaseController {
     @ResponseBody
     public BaseModel<?> runJob(String name) {
         Asserts.notNull(name, "参数异常");
-        Task task = scheduler.getTaskByName(name);
+        Scheduler.Task task = scheduler.getTaskByName(name);
         Asserts.notNull(task, "未找到任务。");
         task.runOne();
         return BaseModel.success();
@@ -109,7 +108,7 @@ public class JobController extends BaseController {
         addJob.setStatus(0);
         tilitiliJobMapper.addTilitiliJobSelective(addJob);
 
-        Task task = scheduler.getTaskByName(job.getName());
+        Scheduler.Task task = scheduler.getTaskByName(job.getName());
         if (task == null) return BaseModel.success("已添加，但未找到任务。");
         task.supplement(addJob);
         return BaseModel.success();
@@ -131,7 +130,7 @@ public class JobController extends BaseController {
         upd.setCron(job.getCron());
         tilitiliJobMapper.updateTilitiliJobSelective(upd);
 
-        Task task = scheduler.getTaskByName(job.getName());
+        Scheduler.Task task = scheduler.getTaskByName(job.getName());
         TilitiliJob newJob = tilitiliJobMapper.getTilitiliJobById(upd.getId());
         if (task == null) return BaseModel.success("已编辑，但未找到任务。");
         task.supplement(newJob);
