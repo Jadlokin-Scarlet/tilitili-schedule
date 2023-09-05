@@ -1,13 +1,9 @@
-package club.tilitili.schedule.component;
-
-import org.apache.log4j.Logger;
+package club.tilitili.schedule.entity.dto;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class Executor {
-    private static final Logger log = Logger.getLogger(Executor.class);
-
     private final Object bean;
     private final Method method;
 

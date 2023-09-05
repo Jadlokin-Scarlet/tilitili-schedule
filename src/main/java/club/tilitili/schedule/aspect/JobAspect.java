@@ -1,6 +1,6 @@
 package club.tilitili.schedule.aspect;
 
-import club.tilitili.schedule.component.Executor;
+import club.tilitili.schedule.entity.dto.Executor;
 import club.tilitili.schedule.component.Scheduler;
 import club.tilitili.schedule.annotation.Job;
 import org.springframework.aop.framework.AopProxyUtils;
