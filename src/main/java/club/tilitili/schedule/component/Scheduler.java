@@ -3,6 +3,7 @@ package club.tilitili.schedule.component;
 import club.tilitili.schedule.entity.TilitiliJob;
 import club.tilitili.schedule.entity.TilitiliLog;
 import club.tilitili.schedule.entity.dto.Executor;
+import club.tilitili.schedule.exception.AssertException;
 import club.tilitili.schedule.mapper.schedule.TilitiliJobMapper;
 import club.tilitili.schedule.mapper.schedule.TilitiliLogMapper;
 import club.tilitili.schedule.util.ExceptionUtils;
@@ -96,6 +97,9 @@ public class Scheduler {
 
         @Async
         public void runOne() {
+            if (this.future.getDelay(TimeUnit.MILLISECONDS) <= 0) {
+                throw new AssertException("任务撞车");
+            }
             doRun();
         }
 

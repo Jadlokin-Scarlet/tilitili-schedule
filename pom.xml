@@ -6,7 +6,7 @@
 
     <groupId>club.tilitili</groupId>
     <artifactId>tilitili-schedule</artifactId>
-    <version>1.5.7</version>
+    <version>1.5.8</version>
     <packaging>jar</packaging>
     <name>tilitili-schedule</name>
     <url>https://github.com/Jadlokin-Scarlet/tilitili-schedule</url>
