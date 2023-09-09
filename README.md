@@ -26,7 +26,7 @@ INSERT INTO `tilitili_user`(`user_name`, `password`, `status`, `create_time`, `u
 <dependency>
     <groupId>club.tilitili</groupId>
     <artifactId>tilitili-schedule</artifactId>
-    <version>1.5.7</version>
+    <version>1.5.8</version>
 </dependency>
 ```
 2. 找一个mysql数据库，新建库，执行项目里的几个sql文件
