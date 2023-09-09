@@ -11,9 +11,7 @@ import club.tilitili.schedule.service.ResourceService;
 import club.tilitili.schedule.service.TilitiliJobService;
 import club.tilitili.schedule.service.TilitiliUserService;
 import org.springframework.context.annotation.Import;
-import org.springframework.scheduling.annotation.EnableAsync;
 
-@EnableAsync
 @Import({
         ScheduleSourceConfig.class,
         JobAspect.class, Scheduler.class,
