@@ -10,7 +10,6 @@ import club.tilitili.schedule.util.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.support.CronSequenceGenerator;
 import org.springframework.stereotype.Component;
 
@@ -95,12 +94,11 @@ public class Scheduler {
             this.future.cancel(true);
         }
 
-        @Async
         public void runOne() {
             if (this.future.getDelay(TimeUnit.MILLISECONDS) <= 0) {
                 throw new AssertException("任务撞车");
             }
-            doRun();
+            scheduledExecutorService.schedule(this::doRun, 1, TimeUnit.MILLISECONDS);
         }
 
         public Task scheduler() {
