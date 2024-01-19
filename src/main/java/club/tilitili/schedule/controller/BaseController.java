@@ -1,9 +1,10 @@
 package club.tilitili.schedule.controller;
 
-import club.tilitili.schedule.exception.UnLoginException;
 import club.tilitili.schedule.entity.BaseModel;
 import club.tilitili.schedule.exception.AssertException;
-import org.apache.log4j.Logger;
+import club.tilitili.schedule.exception.UnLoginException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 
 public class BaseController {
-    private static final Logger log = Logger.getLogger(BaseController.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseController.class);
 
     @ExceptionHandler(AssertException.class)
     @ResponseBody
