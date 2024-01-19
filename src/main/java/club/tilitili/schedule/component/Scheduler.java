@@ -1,5 +1,6 @@
 package club.tilitili.schedule.component;
 
+import club.tilitili.schedule.controller.BaseController;
 import club.tilitili.schedule.entity.TilitiliJob;
 import club.tilitili.schedule.entity.TilitiliLog;
 import club.tilitili.schedule.entity.dto.Executor;
@@ -7,7 +8,8 @@ import club.tilitili.schedule.exception.AssertException;
 import club.tilitili.schedule.mapper.schedule.TilitiliJobMapper;
 import club.tilitili.schedule.mapper.schedule.TilitiliLogMapper;
 import club.tilitili.schedule.util.ExceptionUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.support.CronSequenceGenerator;
@@ -21,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class Scheduler {
-    private static final Logger log = Logger.getLogger(Scheduler.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseController.class);
 
     private final ScheduledExecutorService scheduledExecutorService;
     private final TilitiliJobMapper tilitiliJobMapper;

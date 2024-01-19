@@ -8,17 +8,14 @@ import club.tilitili.schedule.entity.TilitiliJobDTO;
 import club.tilitili.schedule.entity.query.TilitiliJobQuery;
 import club.tilitili.schedule.mapper.schedule.TilitiliJobMapper;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.scheduling.support.CronSequenceGenerator;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 class TestApplicationTest {
     @Resource
