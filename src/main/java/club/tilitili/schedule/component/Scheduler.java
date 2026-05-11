@@ -8,13 +8,14 @@ import club.tilitili.schedule.exception.AssertException;
 import club.tilitili.schedule.mapper.schedule.TilitiliJobMapper;
 import club.tilitili.schedule.mapper.schedule.TilitiliLogMapper;
 import club.tilitili.schedule.util.ExceptionUtils;
+import org.apache.logging.log4j.core.util.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.support.CronSequenceGenerator;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -43,8 +44,12 @@ public class Scheduler {
             taskMap.put(name, new Task(executor));
             log.info(String.format("Job[%s]未登记，启动失败", name));
         } else {
-            taskMap.put(name, new Task(executor, tilitiliJob).scheduler());
-        }
+			try {
+				taskMap.put(name, new Task(executor, tilitiliJob).scheduler());
+			} catch (ParseException e) {
+                log.error(String.format("Job[%s]启动失败", name), e);
+			}
+		}
     }
 
     public Task getTaskByName(String name) {
@@ -54,7 +59,7 @@ public class Scheduler {
     public class Task implements Runnable {
         private final Executor executor;
 
-        private CronSequenceGenerator sequenceGenerator;
+        private CronExpression cronExpression;
         private ScheduledFuture<?> future;
         private Date lastRunTime;
 
@@ -64,7 +69,7 @@ public class Scheduler {
         private String cron;
         private Integer status;
 
-        public Task(Executor executor, TilitiliJob tilitiliJob) {
+        public Task(Executor executor, TilitiliJob tilitiliJob) throws ParseException {
             this.executor = executor;
             supplement(tilitiliJob);
         }
@@ -73,14 +78,14 @@ public class Scheduler {
             this.executor = executor;
         }
 
-        public void supplement(TilitiliJob tilitiliJob) {
+        public void supplement(TilitiliJob tilitiliJob) throws ParseException {
             this.id = tilitiliJob.getId();
             this.title = tilitiliJob.getTitle();
             this.name = tilitiliJob.getName();
             this.cron = tilitiliJob.getCron();
             this.status = tilitiliJob.getStatus();
 
-            this.sequenceGenerator = new CronSequenceGenerator(this.cron, TimeZone.getDefault());
+            this.cronExpression = new CronExpression(this.cron);
         }
 
         public void start() {
@@ -107,7 +112,7 @@ public class Scheduler {
             log.info(String.format("%s start scheduler", name));
             try {
                 if (this.status == 1) {
-                    Date lastRunTime = this.sequenceGenerator.next(Optional.ofNullable(this.lastRunTime).orElse(new Date()));
+                    Date lastRunTime = this.cronExpression.getNextValidTimeAfter(Optional.ofNullable(this.lastRunTime).orElse(new Date()));
                     long nextTime = lastRunTime.getTime() - System.currentTimeMillis();
                     this.future = scheduledExecutorService.schedule(this, nextTime, TimeUnit.MILLISECONDS);
                     log.info(String.format("%s scheduler in %s", name, nextTime));

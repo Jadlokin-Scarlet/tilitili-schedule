@@ -8,17 +8,21 @@ import club.tilitili.schedule.entity.TilitiliJobDTO;
 import club.tilitili.schedule.entity.query.TilitiliJobQuery;
 import club.tilitili.schedule.mapper.schedule.TilitiliJobMapper;
 import club.tilitili.schedule.util.Asserts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/api/job")
 public class JobController extends BaseController {
+    private static final Logger log = LoggerFactory.getLogger(JobController.class);
 
     private final Scheduler scheduler;
     private final TilitiliJobMapper tilitiliJobMapper;
@@ -110,8 +114,13 @@ public class JobController extends BaseController {
 
         Scheduler.Task task = scheduler.getTaskByName(job.getName());
         if (task == null) return BaseModel.success("已添加，但未找到任务。");
-        task.supplement(addJob);
-        return BaseModel.success();
+		try {
+			task.supplement(addJob);
+		} catch (ParseException e) {
+            log.error("已添加，但任务启动失败。", e);
+			return BaseModel.success("已添加，但任务启动失败。");
+		}
+		return BaseModel.success();
     }
 
     @RequestMapping("/edit")
@@ -133,8 +142,13 @@ public class JobController extends BaseController {
         Scheduler.Task task = scheduler.getTaskByName(job.getName());
         TilitiliJob newJob = tilitiliJobMapper.getTilitiliJobById(upd.getId());
         if (task == null) return BaseModel.success("已编辑，但未找到任务。");
-        task.supplement(newJob);
-        if (newJob.getStatus() == 1) {
+		try {
+			task.supplement(newJob);
+		} catch (ParseException e) {
+            log.error("已编辑，但任务启动失败。", e);
+            return BaseModel.success("已编辑，但任务启动失败。");
+		}
+		if (newJob.getStatus() == 1) {
             tilitiliJobMapper.updateTilitiliJobByName(newJob.getName(), 0);
             task.stop();
         }
